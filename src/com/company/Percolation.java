@@ -8,6 +8,7 @@ public class Percolation {
     private int size;
     private int[] grid;
     private WeightedQuickUnionUF WQU;
+    //private QuickFindUF QF;
     private int openSquares = 0;
 
     private int[] calculateCoordinates(int index){
@@ -59,7 +60,7 @@ public class Percolation {
     private boolean isUnion(int index){
         if(index >= 0 && index < size * size) {
             for (int i = 0; i < size; i++) {
-                if (WQU.connected(index, i)) {
+                if (WQU.connected(index, i) && isOpen(calculateCoordinates(index)[0], calculateCoordinates(index)[1]) == true) {
                     return true;
                 }
             }
@@ -82,6 +83,7 @@ public class Percolation {
     public Percolation(int N){
         size = N;
         WQU = new WeightedQuickUnionUF(size * size);
+        // QF = new QuickFindUF(size * size);
         grid = new int[N * N];
         //run();
     }
@@ -91,6 +93,7 @@ public class Percolation {
         int curr_index = calculateIndex(row, col);
         if(curr_index >= 0 && curr_index < size*size){
             grid[curr_index] = 1;
+            openSquares = openSquares + 1;
             unionAdjacent(row, col);
         } else {
             throw new IndexOutOfBoundsException();
@@ -123,7 +126,7 @@ public class Percolation {
 
     // WQU probably useful
     public boolean percolates(){
-        for(int i = size*size - 4; i < size*size; i++){
+        for(int i = size*size - size; i < size*size; i++){
             if(isUnion(i) == true){
                 return true;
             }
