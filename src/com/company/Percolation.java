@@ -6,15 +6,19 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import edu.princeton.cs.algs4.QuickFindUF;
 
 public class Percolation {
+    private int size;
+    private int[] grid;
+    private int openSquares = 0;
 
-    private void calculateCoordinates(int N, int index){
-        int row = index/N;
-        int column = index % N;
-        open(row, column);
-        findAdjacentSquares(N, row, column);
+    private int[] calculateCoordinates(int index){
+        int row = index/size;
+        int column = index % size;
+        int coordinates[] = {row, column};
+        return coordinates;
+
     }
-    private int caclulateIndex(int N, int row, int column){
-        return row * N + column;
+    private int calculateIndex(int row, int column){
+        return row * size + column;
     }
     private int findAdjacentSquares(int N, int row, int column){
         int top = (row - 1) * N + column;
@@ -23,23 +27,34 @@ public class Percolation {
         int right = row * N + (column + 1);
         return -1;
     }
-    private void findRandomSquare(int N){
-         calculateCoordinates(N, StdRandom.uniform(0, N));
+    private void findRandomSquare(){
+         int[] square = calculateCoordinates(StdRandom.uniform(0, size));
+         boolean open_check = isOpen(square[0], square[1]);
+         if(open_check == false){
+             open(square[0], square[1]);
+         }
     }
 
     public Percolation(int N){
-        int board[] = new int[N * N];
-        findRandomSquare(N);
+        size = N;
+        grid = new int[N * N];
     }
 
     // WQU probably useful
     public void open(int row, int col){
-        StdRandom.uniform(0, N)
+        int curr_index = calculateIndex(row, col);
+        grid[curr_index] = 1;
+
     }
 
     // WQU probably useful
     public boolean isOpen(int row, int col){
-        return true;
+        int curr_index = calculateIndex(row, col);
+        if(grid[curr_index] > 0){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // WQU probably useful
